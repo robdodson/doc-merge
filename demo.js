@@ -10,4 +10,4 @@ var OUTPUT = path.join(__dirname, 'test/tmp');
 rimraf.sync(OUTPUT);
 mkdirp.sync(OUTPUT);
 
-generate(FIXTURES, OUTPUT);
+generate(FIXTURES, OUTPUT, {merge: true});

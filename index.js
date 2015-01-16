@@ -2,8 +2,6 @@ var fs = require('fs');
 var path = require('path');
 var parse = require('polymer-context-free-parser/context-free-parser').parse;
 
-var list = {};
-
 /**
  * Generates an object where each element's name is the key, and
  * the value is the element's docs after they've been run through
@@ -24,7 +22,9 @@ var list = {};
  * will have that content merged into their JSON output.
  * 
  */
-function buildList(dirpath, merge) {
+function buildList(dirpath) {
+  var list = {};
+
   var dirs = fs.readdirSync(dirpath)
     .map(function(dir) {
       return path.join(dirpath, dir)
@@ -38,25 +38,63 @@ function buildList(dirpath, merge) {
     var html = fs.readFileSync(filepath, 'utf-8');
     var entities = parse(html);
     entities.forEach(function(entity) {
-      if (merge) {
-        entity = merge(entity);
-      }
-
       list[entity.name] = entity;
     });
   });
+
+  return list;
 }
 
-function merge() {
-  
+function mergeList(list) {
+  var mergedList = {};
+  for (key in list) {
+    var entity = list[key];
+    entity = merge(entity);
+    mergedList[key] = entity;
+  }
+  return mergedList;
 }
+
+/**
+ * Check to see if entity has @extends or @mixins pragmas
+ * and merge that content into the JSON representation.
+ * @param  {object} entity Element definition in JSON format
+ */
+function merge(entity) {
+  if (entity.extends && entity.extends.length) {
+    entity.extendsEntities = getExtends(entity);
+  }
+  // if (entity.mixins && entity.mixins.length) {
+  //   var mixinEntities = getMixins(entity);
+  // }
+}
+
+function getExtends(entity) {
+  var parents = [];
+  while (entity.extends && entity.extends.length) {
+    // An element can only extend one other element
+    entity = list[entity.extends[0]];
+    parents.push(entity);
+  }
+  return parents;
+}
+
+// function getMixins(entity) {
+//   var mixins = [];
+//   entity.mixins.forEach(function(mixin) {
+//     while (entity.mixins && entity.mixins.length) {
+
+//     }
+//   });
+//   return mixins;
+// }
 
 /**
  * Writes a JSON file for each element to the specified output dir
  *
  * @param  {string} output A full path to an output directory
  */
-function writeFiles(output) {
+function writeFiles(output, list) {
   Object.keys(list).forEach(function(key) {
     var entity = list[key];
     fs.writeFileSync(path.join(output, entity.name + '.json'), JSON.stringify(entity, null, 2));
@@ -66,8 +104,12 @@ function writeFiles(output) {
 function generate(dirpath, output, options) {
   options.merge = options.merge || false;
 
-  buildList(dirpath, options.merge);
-  writeFiles(output);
+  var list = buildList(dirpath);
+  if (options.merge) {
+    list = mergeList(list);
+  }
+  debugger;
+  writeFiles(output, list);
 }
 
 module.exports = generate;
