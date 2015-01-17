@@ -8,7 +8,7 @@ var parse = require('polymer-context-free-parser/context-free-parser').parse;
  * context-free parser.
  *
  * ex:
- * 
+ *
  * {
  *   "core-ajax": { "name": "core-ajax", "description": "..." },
  *   "core-icon": { "name": "core-icon", "description": "..." },
@@ -20,7 +20,7 @@ var parse = require('polymer-context-free-parser/context-free-parser').parse;
  *
  * @param  {string} merge If true, elements with @extends and @mixins pragmas
  * will have that content merged into their JSON output.
- * 
+ *
  */
 function buildList(dirpath) {
   var list = {};
@@ -46,48 +46,57 @@ function buildList(dirpath) {
 }
 
 function mergeList(list) {
-  var mergedList = {};
   for (key in list) {
-    var entity = list[key];
-    entity = merge(entity);
-    mergedList[key] = entity;
+    merge(list[key], list);
   }
-  return mergedList;
+  return list;
 }
 
-/**
- * Check to see if entity has @extends or @mixins pragmas
- * and merge that content into the JSON representation.
- * @param  {object} entity Element definition in JSON format
- */
-function merge(entity) {
-  if (entity.extends && entity.extends.length) {
-    entity.extendsEntities = getExtends(entity);
+// For each element, find anything that it extends or is mixed into it
+// and append methods/attrs/events to the original element's documentation
+function merge(entity, list) {
+
+  function getParents(entity, memo) {
+    // Remember the starting object
+    if (!memo) {
+      memo = entity;
+      memo.parentMethods = [];
+    }
+
+    // Check if the entity extends another one,
+    // if so, recurse
+    if (entity.extends) {
+      getParents(list[entity.extends[0].name], memo);
+    }
+
+    // Check if the entity mixes-in another one,
+    // if so, recurse
+    if (entity.mixins) {
+      entity.mixins.forEach(function(mixin) {
+        // Mixins are documented as Polymer.CoreResizable
+        // ...for whatever reason
+        var mixinName = mixin.name.replace('Polymer.', '');
+        getParents(list[mixinName], memo);
+      });
+    }
+
+    // Check if the memo is the current object, if so,
+    // we're back at the beginning and can skip to the return.
+    // Otherwise, add to the original entity's list of either
+    // parent methods
+    if (memo !== entity) {
+      memo.parentMethods.push({
+        name: entity.name,
+        methods: entity.methods
+      });
+    }
+
+    return memo;
   }
-  // if (entity.mixins && entity.mixins.length) {
-  //   var mixinEntities = getMixins(entity);
-  // }
+
+  getParents(entity);
+
 }
-
-function getExtends(entity) {
-  var parents = [];
-  while (entity.extends && entity.extends.length) {
-    // An element can only extend one other element
-    entity = list[entity.extends[0]];
-    parents.push(entity);
-  }
-  return parents;
-}
-
-// function getMixins(entity) {
-//   var mixins = [];
-//   entity.mixins.forEach(function(mixin) {
-//     while (entity.mixins && entity.mixins.length) {
-
-//     }
-//   });
-//   return mixins;
-// }
 
 /**
  * Writes a JSON file for each element to the specified output dir
@@ -108,7 +117,6 @@ function generate(dirpath, output, options) {
   if (options.merge) {
     list = mergeList(list);
   }
-  debugger;
   writeFiles(output, list);
 }
 

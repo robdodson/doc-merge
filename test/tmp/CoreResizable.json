@@ -12,5 +12,6 @@
       "name": "resizableDetachedHandler",
       "description": "\nUser must call from `detached` callback\n\n"
     }
-  ]
+  ],
+  "parentMethods": []
 }

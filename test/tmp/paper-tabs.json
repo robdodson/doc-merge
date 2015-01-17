@@ -57,5 +57,47 @@
       "name": "updateBar",
       "description": "\nInvoke this to update the size and position of the bottom bar.  Usually\nyou only need to call this if the `paper-tabs` is initially hidden and\nlater becomes visible.\n\n"
     }
+  ],
+  "parentMethods": [
+    {
+      "name": "core-selector",
+      "methods": [
+        {
+          "name": "selectPrevious",
+          "description": "\nSelects the previous item. This should be used in single selection only.\n\n                 wrap to the end\n",
+          "params": [
+            {
+              "type": "boolean",
+              "name": "wrapped",
+              "description": "if true and it is already at the first item,"
+            }
+          ]
+        },
+        {
+          "name": "selectNext",
+          "description": "\nSelects the next item.  This should be used in single selection only.\n\n                 wrap to the front\n",
+          "params": [
+            {
+              "type": "boolean",
+              "name": "wrapped",
+              "description": "if true and it is already at the last item,"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "CoreResizable",
+      "methods": [
+        {
+          "name": "resizableAttachedHandler",
+          "description": "\nUser must call from `attached` callback\n\n"
+        },
+        {
+          "name": "resizableDetachedHandler",
+          "description": "\nUser must call from `detached` callback\n\n"
+        }
+      ]
+    }
   ]
 }

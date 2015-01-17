@@ -34,5 +34,20 @@
       "type": "Boolean",
       "default": "false"
     }
+  ],
+  "parentMethods": [
+    {
+      "name": "CoreResizable",
+      "methods": [
+        {
+          "name": "resizableAttachedHandler",
+          "description": "\nUser must call from `attached` callback\n\n"
+        },
+        {
+          "name": "resizableDetachedHandler",
+          "description": "\nUser must call from `detached` callback\n\n"
+        }
+      ]
+    }
   ]
 }
