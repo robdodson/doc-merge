@@ -61,6 +61,8 @@ function merge(entity, list) {
     if (!memo) {
       memo = entity;
       memo.parentMethods = [];
+      memo.parentAttributes = [];
+      memo.parentEvents = [];
     }
 
     // Check if the entity extends another one,
@@ -82,12 +84,20 @@ function merge(entity, list) {
 
     // Check if the memo is the current object, if so,
     // we're back at the beginning and can skip to the return.
-    // Otherwise, add to the original entity's list of either
-    // parent methods
+    // Otherwise, add to the original entity's methods/attrs/ events
+    // to the memo object
     if (memo !== entity) {
       memo.parentMethods.push({
         name: entity.name,
         methods: entity.methods
+      });
+      memo.parentAttributes.push({
+        name: entity.name,
+        methods: entity.attributes
+      });
+      memo.parentEvents.push({
+        name: entity.name,
+        methods: entity.events
       });
     }
 

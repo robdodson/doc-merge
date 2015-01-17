@@ -149,5 +149,7 @@
     }
   ],
   "returns": "the next item or undefined if there is none",
-  "parentMethods": []
+  "parentMethods": [],
+  "parentAttributes": [],
+  "parentEvents": []
 }
