@@ -56,5 +56,30 @@
         }
       ]
     }
+  ],
+  "parentMethods": [
+    {
+      "name": "IsMixin",
+      "methods": [
+        {
+          "name": "doSomething",
+          "description": "\nA stub mixin method\n\n"
+        },
+        {
+          "name": "doSomethingElse",
+          "description": "\nAnother stub mixin method\n\n"
+        }
+      ]
+    }
+  ],
+  "parentAttributes": [
+    {
+      "name": "IsMixin"
+    }
+  ],
+  "parentEvents": [
+    {
+      "name": "IsMixin"
+    }
   ]
 }

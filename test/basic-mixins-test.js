@@ -54,7 +54,7 @@ describe('basic mixins', function() {
       assert.ok(content.mixins.length);
     });
     
-    it('should mixin x-is-mixin', function() {
+    it('should mixin Polymer.IsMixin', function() {
       assert.ok(content.mixins[0].name == 'Polymer.IsMixin');
     });
 

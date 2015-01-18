@@ -1,15 +1,15 @@
 {
-  "name": "IsMixin",
-  "description": "\n  `Polymer.IsMixin` is a test mixin\n  \n",
+  "name": "IsAnotherMixin",
+  "description": "\n  `Polymer.IsAnotherMixin` is a test mixin\n  \n",
   "status": "beta",
   "homepage": "github.io",
   "methods": [
     {
-      "name": "doSomething",
+      "name": "doFoo",
       "description": "\nA stub mixin method\n\n"
     },
     {
-      "name": "doSomethingElse",
+      "name": "doBar",
       "description": "\nAnother stub mixin method\n\n"
     }
   ],
