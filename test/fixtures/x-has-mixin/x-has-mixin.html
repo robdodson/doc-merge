@@ -1,0 +1,99 @@
+<!--
+    @license
+    Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+    The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+    The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+    Code distributed by Google as part of the polymer project is also
+    subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../x-is-mixin/x-is-mixin.html">
+
+<!--
+Element providing solution to no problem in particular.
+
+##### Example
+
+    <x-has-mixin></x-has-mixin>
+
+@element x-has-mixin
+@mixins Polymer.IsMixin https://github.com/polymer/x-is-mixin
+@blurb Element providing solution to no problem in particular.
+@status alpha
+@homepage http://polymerlabs.github.io/x-has-mixin
+-->
+<polymer-element name="x-has-mixin" attributes="notitle author">
+
+  <template>
+
+    <link rel="stylesheet" href="x-has-mixin.css">
+
+    <h1>Hello from x-has-mixin</h1>
+    <content></content>
+
+  </template>
+
+  <script>
+
+    Polymer(Polymer.mixin({
+      /**
+       * The `author` attribute sets an initial author
+       *
+       * @attribute author
+       * @type string
+       * @default 'Dimitri Glazkov'
+       */
+      author: 'Dimitri Glazkov',
+
+      /**
+       * `fancy` is a property that does something fancy.
+       *
+       * @property fancy
+       * @type bool
+       * @default false
+       */
+      fancy: false,
+
+      ready: function() {
+        // Ready is a lifecycle callback.
+        // You can do setup work in here.
+        // More info: http://www.polymer-project.org/docs/polymer/polymer.html#lifecyclemethods
+      },
+
+      /**
+       * The `sayHello` method will return a greeting.
+       *
+       * @method sayHello
+       * @param {String} greeting Pass in a specific greeting.
+       * @return {String} Returns a string greeting.
+       */
+      sayHello: function(greeting) {
+        var response = greeting || 'Hello World!';
+        return 'x-has-mixin says, ' + response;
+      },
+
+      /**
+       * The `x-has-mixin-lasers-success` event is fired whenever we
+       * call fireLasers.
+       *
+       * @event x-has-mixin-lasers-success
+       * @param {Object} detail
+       *   @param {string} detail.sound An amazing sound.
+       */
+
+      /**
+       * The `fireLasers` method will fire the lasers. At least
+       * it will dispatch an event that claims lasers were fired :)
+       *
+       * @method fireLasers
+       */
+      fireLasers: function() {
+        this.fire('x-has-mixin-lasers-success', { sound: 'Pew pew pew!' });
+      }
+
+    }, Polymer.CoreResizable));
+
+  </script>
+
+</polymer-element>

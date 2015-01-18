@@ -1,0 +1,90 @@
+<!--
+    @license
+    Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+    The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+    The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+    Code distributed by Google as part of the polymer project is also
+    subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+Element providing solution to no problem in particular.
+
+##### Example
+
+    <x-extendee></x-extendee>
+
+@element x-extendee
+@blurb Element providing solution to no problem in particular.
+@status alpha
+@homepage http://polymerlabs.github.io/x-extendee
+-->
+<polymer-element name="x-extendee" attributes="wizard">
+
+  <template>
+
+    <link rel="stylesheet" href="x-extendee.css">
+
+    <h1>Hello from x-extendee</h1>
+    <content></content>
+
+  </template>
+
+  <script>
+
+    Polymer({
+      /**
+       * The `wizard` attribute sets an initial wizard
+       *
+       * @attribute wizard
+       * @type string
+       * @default 'Addy Osmani'
+       */
+      wizard: 'Addy Osmani',
+
+      /**
+       * `lame` is a property that does something lame.
+       *
+       * @property lame
+       * @type bool
+       * @default false
+       */
+      lame: false,
+
+      /**
+       * The `sayGoodbye` method will say goodbye.
+       *
+       * @method sayGoodbye
+       * @param {String} greeting Pass in a specific greeting.
+       * @return {String} Returns a string greeting.
+       */
+      sayGoodbye: function() {
+        return 'x-extendee says goodbye';
+      },
+
+      /**
+       * The `x-extendee-lasers-fail` event is fired whenever we
+       * call fireLasers.
+       *
+       * @event x-extendee-lasers-fail
+       * @param {Object} detail
+       *   @param {string} detail.sound An amazing sound.
+       */
+
+      /**
+       * The `fireLasers` method will fire the lasers. At least
+       * it will dispatch an event that claims lasers were fired :)
+       *
+       * @method fireLasers
+       */
+      fireLasers: function() {
+        this.fire('x-extendee-lasers-fail', { sound: 'derp derp derp!' });
+      }
+
+    });
+
+  </script>
+
+</polymer-element>

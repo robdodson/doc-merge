@@ -1,4 +1,5 @@
 var fs = require('fs');
+var assign = require('object-assign');
 var path = require('path');
 var parse = require('polymer-context-free-parser/context-free-parser').parse;
 
@@ -17,9 +18,6 @@ var parse = require('polymer-context-free-parser/context-free-parser').parse;
  * @param  {string} dirpath A full path to a directory containing subfolders
  * with elements. Typically this would be the path to your bower_components
  * or components dir.
- *
- * @param  {string} merge If true, elements with @extends and @mixins pragmas
- * will have that content merged into their JSON output.
  *
  */
 function buildList(dirpath) {
@@ -121,10 +119,14 @@ function writeFiles(output, list) {
 }
 
 function generate(dirpath, output, options) {
-  options.merge = options.merge || false;
+  
+  var settings = assign({
+    // These are the defaults.
+    merge: false
+  }, options);
 
   var list = buildList(dirpath);
-  if (options.merge) {
+  if (settings.merge) {
     list = mergeList(list);
   }
   writeFiles(output, list);

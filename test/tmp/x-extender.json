@@ -1,0 +1,60 @@
+{
+  "name": "x-extender",
+  "description": "\nElement providing solution to no problem in particular.\n\n##### Example\n\n    <x-extender></x-extender>\n\n",
+  "extends": [
+    {
+      "name": "x-extendee",
+      "url": null
+    }
+  ],
+  "blurb": "Element providing solution to no problem in particular.",
+  "status": "alpha",
+  "homepage": "http://polymerlabs.github.io/x-extender",
+  "attributes": [
+    {
+      "name": "author",
+      "description": "\nThe `author` attribute sets an initial author\n\n",
+      "type": "string",
+      "default": "'Dimitri Glazkov'"
+    }
+  ],
+  "properties": [
+    {
+      "name": "fancy",
+      "description": "\n`fancy` is a property that does something fancy.\n\n",
+      "type": "bool",
+      "default": "false"
+    }
+  ],
+  "methods": [
+    {
+      "name": "sayHello",
+      "description": "\nThe `sayHello` method will return a greeting.\n\n",
+      "params": [
+        {
+          "type": "String",
+          "name": "greeting",
+          "description": "Pass in a specific greeting."
+        }
+      ]
+    },
+    {
+      "name": "fireLasers",
+      "description": "\nThe `fireLasers` method will fire the lasers. At least\nit will dispatch an event that claims lasers were fired :)\n\n"
+    }
+  ],
+  "return": "{String} Returns a string greeting.",
+  "events": [
+    {
+      "name": "x-extender-lasers-success",
+      "description": "\nThe `x-extender-lasers-success` event is fired whenever we\ncall fireLasers.\n\n",
+      "params": [
+        {
+          "type": "string",
+          "name": "detail.sound",
+          "description": "An amazing sound."
+        }
+      ]
+    }
+  ]
+}
