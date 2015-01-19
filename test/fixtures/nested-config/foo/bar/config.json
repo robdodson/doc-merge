@@ -1,0 +1,13 @@
+{
+  "Polymer.CoreResizable": "test/fixtures/core-resizable/core-resizable.html",
+  "Polymer.CoreResizer": "test/fixtures/core-resizable/core-resizable.html",
+  "core-selector": "test/fixtures/core-selector/core-selector.html",
+  "paper-tabs": "test/fixtures/paper-tabs/paper-tabs.html",
+  "seed-element": "test/fixtures/seed-element/seed-element.html",
+  "x-extendee": "test/fixtures/x-extendee/x-extendee.html",
+  "x-extender": "test/fixtures/x-extender/x-extender.html",
+  "x-has-mixin": "test/fixtures/x-has-mixin/x-has-mixin.html",
+  "Polymer.IsMixin": "test/fixtures/x-is-mixin/x-is-mixin.html",
+  "Polymer.IsAnotherMixin": "test/fixtures/x-is-another-mixin/x-is-another-mixin.html",
+  "x-merger": "test/fixtures/x-merger/x-merger.html"
+}
