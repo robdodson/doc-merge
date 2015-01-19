@@ -33,11 +33,13 @@ function buildList(dirpath) {
 
   dirs.forEach(function(dir) {
     var filepath = path.join(dir, path.basename(dir) + '.html');
-    var html = fs.readFileSync(filepath, 'utf-8');
-    var entities = parse(html);
-    entities.forEach(function(entity) {
-      list[entity.name] = entity;
-    });
+    if (fs.existsSync(filepath)) {
+      var html = fs.readFileSync(filepath, 'utf-8');
+      var entities = parse(html);
+      entities.forEach(function(entity) {
+        list[entity.name] = entity;
+      });
+    }
   });
 
   return list;
@@ -66,7 +68,15 @@ function merge(entity, list) {
     // Check if the entity extends another one,
     // if so, recurse
     if (entity.extends) {
-      getParents(list[entity.extends[0].name], memo);
+      if (list[entity.extends[0].name]) {
+        getParents(list[entity.extends[0].name], memo);
+      } else {
+        console.log(
+          'Unable to find @extends ',
+          list[entity.extends[0].name],
+          'from ', entity.name
+        );
+      }
     }
 
     // Check if the entity mixes-in another one,
@@ -76,7 +86,15 @@ function merge(entity, list) {
         // Mixins are documented as Polymer.CoreResizable
         // ...for whatever reason
         var mixinName = mixin.name.replace('Polymer.', '');
-        getParents(list[mixinName], memo);
+        if (list[mixinName]) {
+          getParents(list[mixinName], memo);
+        } else {
+          console.log(
+            'Unable to find @mixins ',
+            list[mixinName],
+            'from ', entity.name
+          );
+        }
       });
     }
 
@@ -118,18 +136,32 @@ function writeFiles(output, list) {
   });
 }
 
+// function writeConfig(output, list) {
+//   Object.keys(list).forEach(function(key) {
+//     var entity = list[key];
+//     fs.writeFileSync(path.join(output, entity.name + '.json'), JSON.stringify(entity, null, 2));
+//   });
+// }
+
 function generate(dirpath, output, options) {
   
   var settings = assign({
     // These are the defaults.
-    merge: false
+    merge: false,
+    outputConfig: false
   }, options);
 
   var list = buildList(dirpath);
+  
   if (settings.merge) {
     list = mergeList(list);
   }
+
   writeFiles(output, list);
+  
+  // if (settings.outputConfig) {
+  //   writeConfig(output, list);
+  // }
 }
 
 module.exports = generate;
