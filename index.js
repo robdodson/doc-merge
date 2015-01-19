@@ -45,6 +45,30 @@ function buildList(dirpath) {
   return list;
 }
 
+function loadList(pathToConfig) {
+  var list = {};
+  var config;
+
+  try {
+    config = JSON.parse(fs.readFileSync(pathToConfig, 'utf-8'));
+  } catch(e) {
+    console.log('Unable to load config', e);
+  }
+
+  Object.keys(config).forEach(function(key) {
+    var filepath = config[key];
+    if (fs.existsSync(filepath)) {
+      var html = fs.readFileSync(filepath, 'utf-8');
+      var entities = parse(html);
+      entities.forEach(function(entity) {
+        list[entity.name] = entity;
+      });
+    }
+  });
+
+  return list;
+}
+
 function mergeList(list) {
   for (key in list) {
     merge(list[key], list);
@@ -136,32 +160,26 @@ function writeFiles(output, list) {
   });
 }
 
-// function writeConfig(output, list) {
-//   Object.keys(list).forEach(function(key) {
-//     var entity = list[key];
-//     fs.writeFileSync(path.join(output, entity.name + '.json'), JSON.stringify(entity, null, 2));
-//   });
-// }
-
 function generate(dirpath, output, options) {
   
   var settings = assign({
     // These are the defaults.
-    merge: false,
-    outputConfig: false
+    config: null,
+    merge: false
   }, options);
 
-  var list = buildList(dirpath);
+  var list;
+  if (!settings.config) {
+    list = buildList(dirpath);
+  } else {
+    list = loadList(settings.config);
+  }
   
   if (settings.merge) {
     list = mergeList(list);
   }
 
   writeFiles(output, list);
-  
-  // if (settings.outputConfig) {
-  //   writeConfig(output, list);
-  // }
 }
 
 module.exports = generate;
