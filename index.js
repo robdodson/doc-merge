@@ -34,8 +34,8 @@ function buildList(dirpath) {
   dirs.forEach(function(dir) {
     var filepath = path.join(dir, path.basename(dir) + '.html');
     if (fs.existsSync(filepath)) {
-      var html = fs.readFileSync(filepath, 'utf-8');
-      var entities = parse(html);
+      var file = fs.readFileSync(filepath, 'utf-8');
+      var entities = parse(file);
       entities.forEach(function(entity) {
         list[entity.name] = entity;
       });
@@ -58,11 +58,13 @@ function loadList(pathToConfig) {
   Object.keys(config).forEach(function(key) {
     var filepath = config[key];
     if (fs.existsSync(filepath)) {
-      var html = fs.readFileSync(filepath, 'utf-8');
-      var entities = parse(html);
+      var file = fs.readFileSync(filepath, 'utf-8');
+      var entities = parse(file);
       entities.forEach(function(entity) {
         list[entity.name] = entity;
       });
+    } else {
+      console.log('Unable to load file', filepath);
     }
   });
 
@@ -96,9 +98,9 @@ function merge(entity, list) {
         getParents(list[entity.extends[0].name], memo);
       } else {
         console.log(
-          'Unable to find @extends ',
-          list[entity.extends[0].name],
-          'from ', entity.name
+          'Unable to find @extends',
+          entity.extends[0].name,
+          'from', entity.name
         );
       }
     }
@@ -114,9 +116,9 @@ function merge(entity, list) {
           getParents(list[mixinName], memo);
         } else {
           console.log(
-            'Unable to find @mixins ',
-            list[mixinName],
-            'from ', entity.name
+            'Unable to find @mixins',
+            mixinName,
+            'from', entity.name
           );
         }
       });
@@ -161,7 +163,6 @@ function writeFiles(output, list) {
 }
 
 function generate(dirpath, output, options) {
-  
   var settings = assign({
     // These are the defaults.
     config: null,
