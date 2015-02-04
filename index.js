@@ -3,48 +3,6 @@ var assign = require('object-assign');
 var path = require('path');
 var parse = require('polymer-context-free-parser/context-free-parser').parse;
 
-/**
- * Generates an object where each element's name is the key, and
- * the value is the element's docs after they've been run through
- * context-free parser.
- *
- * ex:
- *
- * {
- *   "core-ajax": { "name": "core-ajax", "description": "..." },
- *   "core-icon": { "name": "core-icon", "description": "..." },
- * }
- *
- * @param  {string} dirpath A full path to a directory containing subfolders
- * with elements. Typically this would be the path to your bower_components
- * or components dir.
- *
- */
-function buildList(dirpath) {
-  var list = {};
-
-  var dirs = fs.readdirSync(dirpath)
-    .map(function(dir) {
-      return path.join(dirpath, dir)
-    })
-    .filter(function(dir) {
-      return fs.statSync(dir).isDirectory();
-    });
-
-  dirs.forEach(function(dir) {
-    var filepath = path.join(dir, path.basename(dir) + '.html');
-    if (fs.existsSync(filepath)) {
-      var file = fs.readFileSync(filepath, 'utf-8');
-      var entities = parse(file);
-      entities.forEach(function(entity) {
-        list[entity.name] = entity;
-      });
-    }
-  });
-
-  return list;
-}
-
 function loadList(pathToConfig) {
   var list = {};
   var config;
@@ -86,9 +44,11 @@ function merge(entity, list) {
     // Remember the starting object
     if (!memo) {
       memo = entity;
-      memo.parentMethods = [];
-      memo.parentAttributes = [];
-      memo.parentEvents = [];
+      memo.inherited = {};
+      memo.inherited.methods = [];
+      memo.inherited.attributes = [];
+      memo.inherited.events = [];
+      memo.inherited.properties = [];
     }
 
     // Check if the entity extends another one,
@@ -126,20 +86,24 @@ function merge(entity, list) {
 
     // Check if the memo is the current object, if so,
     // we're back at the beginning and can skip to the return.
-    // Otherwise, add to the original entity's methods/attrs/ events
+    // Otherwise, add to the original entity's methods/attrs/events
     // to the memo object
     if (memo !== entity) {
-      memo.parentMethods.push({
+      memo.inherited.methods.push({
         name: entity.name,
         methods: entity.methods
       });
-      memo.parentAttributes.push({
+      memo.inherited.attributes.push({
         name: entity.name,
-        methods: entity.attributes
+        attributes: entity.attributes
       });
-      memo.parentEvents.push({
+      memo.inherited.events.push({
         name: entity.name,
-        methods: entity.events
+        events: entity.events
+      });
+      memo.inherited.properties.push({
+        name: entity.name,
+        properties: entity.properties
       });
     }
 
@@ -171,7 +135,7 @@ function generate(dirpath, output, options) {
 
   var list;
   if (!settings.config) {
-    list = buildList(dirpath);
+    throw new Error('Missing config.json file');
   } else {
     list = loadList(settings.config);
   }

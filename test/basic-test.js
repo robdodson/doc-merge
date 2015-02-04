@@ -15,10 +15,10 @@ function clean() {
 function reset() {
   clean();
   mkdirp.sync(OUTPUT);
-  generate(FIXTURES, OUTPUT);
+  generate(FIXTURES, OUTPUT, { config: 'test/fixtures/config.json' });
 }
 
-describe('basic', function() {
+describe('config', function() {
 
   before(function() {
     reset();

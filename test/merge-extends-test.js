@@ -15,10 +15,10 @@ function clean() {
 function reset() {
   clean();
   mkdirp.sync(OUTPUT);
-  generate(FIXTURES, OUTPUT, { merge: true });
+  generate(FIXTURES, OUTPUT, { merge: true, config: 'test/fixtures/config.json' });
 }
 
-describe('merge extends', function() {
+describe('config merge extends', function() {
 
   before(function() {
     reset();
@@ -51,16 +51,19 @@ describe('merge extends', function() {
       assert.ok(content.extends[0].name == 'x-extendee');
     });
 
-    describe('parentMethods', function() {
+    describe('inherited', function() {
       
-      it('should contain a parentMethods section', function() {
-        assert.ok(content.parentMethods);
-        assert.ok(content.parentMethods.length);
+      it('should contain a inherited section', function() {
+        assert.ok(content.inherited);
+      });
+
+      it('should contain a inherited.methods section', function() {
+        assert.ok(content.inherited.methods.length);
       });
 
       it('should contain methods from extends elements', function() {
         var extendsMethods;
-        content.parentMethods.forEach(function(methods) {
+        content.inherited.methods.forEach(function(methods) {
           if (methods.name == 'x-extendee') {
             extendsMethods = methods;
           }
