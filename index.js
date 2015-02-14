@@ -91,22 +91,30 @@ function merge(entity, list) {
     // Otherwise, add to the original entity's methods/attrs/events
     // to the memo object
     if (memo !== entity) {
-      memo.inherited.methods.push({
-        name: entity.name,
-        methods: entity.methods
-      });
-      memo.inherited.attributes.push({
-        name: entity.name,
-        attributes: entity.attributes
-      });
-      memo.inherited.events.push({
-        name: entity.name,
-        events: entity.events
-      });
-      memo.inherited.properties.push({
-        name: entity.name,
-        properties: entity.properties
-      });
+      if (entity.methods) {
+        memo.inherited.methods.push({
+          name: entity.name,
+          methods: entity.methods
+        });
+      }
+      if (entity.attributes) {
+        memo.inherited.attributes.push({
+          name: entity.name,
+          attributes: entity.attributes
+        });
+      }
+      if (entity.events) {
+        memo.inherited.events.push({
+          name: entity.name,
+          events: entity.events
+        });
+      }
+      if (entity.properties) {
+        memo.inherited.properties.push({
+          name: entity.name,
+          properties: entity.properties
+        });
+      }
     }
 
     return memo;
