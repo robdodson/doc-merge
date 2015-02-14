@@ -20,6 +20,8 @@ function loadList(pathToConfig) {
       var entities = parse(file);
       entities.forEach(function(entity) {
         list[entity.name] = entity;
+        // Sneak in the location on disk as well
+        list[entity.name].location = filepath;
       });
     } else {
       console.log('Unable to load file', filepath);
