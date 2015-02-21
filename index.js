@@ -2,6 +2,7 @@ var fs = require('fs');
 var assign = require('object-assign');
 var path = require('path');
 var parse = require('polymer-context-free-parser/context-free-parser').parse;
+var glob = require('glob');
 
 /**
  * If no config.json file was passed in,
@@ -11,29 +12,21 @@ var parse = require('polymer-context-free-parser/context-free-parser').parse;
  * ex: Find all elements in 'Users/rob/components' with
  * the prefix 'foo', as in 'foo-button'.
  */
-function buildList(dirpath, prefix) {
+function buildList(dirpath, prefixArr) {
   var list = {};
+  var globs = [];
+  var files = [];
 
-  var dirs = fs.readdirSync(dirpath)
-    .map(function(dir) {
-      return path.join(dirpath, dir)
-    })
-    .filter(function(dir) {
-      return fs.statSync(dir).isDirectory();
-    })
-    .filter(function(dir) {
-      return prefix.indexOf(path.basename(dir).split('-')[0]) !== -1;
-    });
+  prefixArr.forEach(function(prefix) {
+    globs.push(glob.sync('**/' + prefix + '-*.html', {cwd: dirpath}));
+  });
 
-  dirs.forEach(function(dir) {
-    var filepath = path.join(dir, path.basename(dir) + '.html');
-    var html = fs.readFileSync(filepath, 'utf-8');
-    var entities = parse(html);
-    entities.forEach(function(entity) {
-      list[entity.name] = entity;
-      // Sneak in the location on disk as well
-      list[entity.name].location = filepath;
-    });
+  // Merge everything together
+  files = files.concat.apply(files, globs);
+
+  files.forEach(function(file) {
+    var filepath = path.join(dirpath, file);
+    copyToList(list, filepath);
   });
 
   return list;
@@ -51,20 +44,24 @@ function loadList(pathToConfig) {
 
   Object.keys(config).forEach(function(key) {
     var filepath = config[key];
-    if (fs.existsSync(filepath)) {
-      var file = fs.readFileSync(filepath, 'utf-8');
-      var entities = parse(file);
-      entities.forEach(function(entity) {
-        list[entity.name] = entity;
-        // Sneak in the location on disk as well
-        list[entity.name].location = filepath;
-      });
-    } else {
-      console.log('Unable to load file', filepath);
-    }
+    copyToList(list, filepath);
   });
 
   return list;
+}
+
+function copyToList(list, filepath) {
+  if (fs.existsSync(filepath)) {
+    var file = fs.readFileSync(filepath, 'utf-8');
+    var entities = parse(file);
+    entities.forEach(function(entity) {
+      list[entity.name] = entity;
+      // Sneak in the location on disk as well
+      list[entity.name].location = filepath;
+    });
+  } else {
+    console.log('Unable to load file', filepath);
+  }
 }
 
 function mergeList(list) {
@@ -192,7 +189,7 @@ function generate(dirpath, output, options) {
   } else {
     list = loadList(settings.config);
   }
-  
+
   if (settings.merge) {
     list = mergeList(list);
   }

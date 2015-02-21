@@ -12,6 +12,7 @@
     "url": "http://polymer.github.io/LICENSE.txt"
   },
   "dependencies": {
+    "glob": "^4.4.0",
     "mkdirp": "^0.5.0",
     "object-assign": "^2.0.0",
     "polymer-context-free-parser": "git+https://github.com/polymer/context-free-parser.git#master",
