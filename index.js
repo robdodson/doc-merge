@@ -3,6 +3,40 @@ var assign = require('object-assign');
 var path = require('path');
 var parse = require('polymer-context-free-parser/context-free-parser').parse;
 
+/**
+ * If no config.json file was passed in,
+ * attempt to build the list of elements using
+ * a directory and prefix.
+ *
+ * ex: Find all elements in 'Users/dudebro/components' with
+ * the prefix 'foo-'
+ */
+function buildList(dirpath, prefix) {
+  var list = {};
+
+  var dirs = fs.readdirSync(dirpath)
+    .map(function(dir) {
+      return path.join(dirpath, dir)
+    })
+    .filter(function(dir) {
+      return fs.statSync(dir).isDirectory() &&
+             path.basename(dir).indexOf(prefix) !== -1;
+    });
+
+  dirs.forEach(function(dir) {
+    var filepath = path.join(dir, path.basename(dir) + '.html');
+    var html = fs.readFileSync(filepath, 'utf-8');
+    var entities = parse(html);
+    entities.forEach(function(entity) {
+      list[entity.name] = entity;
+      // Sneak in the location on disk as well
+      list[entity.name].location = filepath;
+    });
+  });
+
+  return list;
+}
+
 function loadList(pathToConfig) {
   var list = {};
   var config;
@@ -140,12 +174,16 @@ function generate(dirpath, output, options) {
   var settings = assign({
     // These are the defaults.
     config: null,
-    merge: false
+    merge: false,
+    prefix: null
   }, options);
 
   var list;
   if (!settings.config) {
-    throw new Error('Missing config.json file');
+    if (!settings.prefix) {
+      throw new Error('Missing config.json file or prefix');
+    }
+    list = buildList(dirpath, settings.prefix);
   } else {
     list = loadList(settings.config);
   }

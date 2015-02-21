@@ -18,7 +18,7 @@ function reset() {
   generate(FIXTURES, OUTPUT, { config: 'test/fixtures/config.json' });
 }
 
-describe('config mixins', function() {
+describe('config :: mixins', function() {
 
   before(function() {
     reset();

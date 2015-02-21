@@ -18,7 +18,7 @@ function reset() {
   generate(FIXTURES, OUTPUT, { merge: true, config: 'test/fixtures/config.json' });
 }
 
-describe('config merge extends', function() {
+describe('config :: merge extends', function() {
 
   before(function() {
     reset();

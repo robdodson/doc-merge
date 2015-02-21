@@ -20,7 +20,7 @@ function reset() {
   });
 }
 
-describe('nested config', function() {
+describe('config :: nested', function() {
 
   before(function() {
     reset();

@@ -18,7 +18,7 @@ function reset() {
   generate(FIXTURES, OUTPUT, { config: 'test/fixtures/config.json' });
 }
 
-describe('config extends', function() {
+describe('config :: extends', function() {
 
   before(function() {
     reset();

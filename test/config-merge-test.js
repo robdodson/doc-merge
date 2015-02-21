@@ -18,7 +18,7 @@ function reset() {
   generate(FIXTURES, OUTPUT, { merge: true, config: 'test/fixtures/config.json' });
 }
 
-describe('config merge', function() {
+describe('config :: merge', function() {
 
   before(function() {
     reset();
@@ -62,10 +62,6 @@ describe('config merge', function() {
 
     it('should contain a homepage for the x-merger', function() {
       assert.ok(content.homepage);
-    });
-
-    it('should contain a return for the x-merger', function() {
-      assert.ok(content.return);
     });
 
     it('should contain attributes for the x-merger', function() {

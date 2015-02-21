@@ -5,8 +5,9 @@ var assert = require('assert');
 var rimraf = require('rimraf');
 var mkdirp = require('mkdirp');
 
-var FIXTURES = path.join(__dirname, 'fixtures');
+var DIR = path.join(__dirname, 'fixtures');
 var OUTPUT = path.join(__dirname, 'tmp');
+var PREFIX = 'seed-';
 
 function clean() {
   rimraf.sync(OUTPUT);
@@ -15,10 +16,10 @@ function clean() {
 function reset() {
   clean();
   mkdirp.sync(OUTPUT);
-  generate(FIXTURES, OUTPUT, { config: 'test/fixtures/config.json' });
+  generate(DIR, OUTPUT, {prefix: PREFIX});
 }
 
-describe('config', function() {
+describe('prefix :: basic', function() {
 
   before(function() {
     reset();
@@ -64,10 +65,6 @@ describe('config', function() {
       assert.ok(content.homepage);
     });
 
-    it('should contain a return for the seed-element', function() {
-      assert.ok(content.return);
-    });
-
     it('should contain attributes for the seed-element', function() {
       assert.ok(content.attributes);
       assert.ok(content.attributes.length);
@@ -86,6 +83,11 @@ describe('config', function() {
     it('should contain events for the seed-element', function() {
       assert.ok(content.events);
       assert.ok(content.events.length);
+    });
+
+    it('should contain a location for the seed-element', function() {
+      assert.ok(content.location);
+      assert.ok(content.location.length);
     });
 
   });
