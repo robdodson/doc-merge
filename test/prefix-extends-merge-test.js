@@ -7,6 +7,7 @@ var mkdirp = require('mkdirp');
 
 var FIXTURES = path.join(__dirname, 'fixtures');
 var OUTPUT = path.join(__dirname, 'tmp');
+var PREFIX = ['x'];
 
 function clean() {
   rimraf.sync(OUTPUT);
@@ -15,10 +16,10 @@ function clean() {
 function reset() {
   clean();
   mkdirp.sync(OUTPUT);
-  generate(FIXTURES, OUTPUT, { merge: true, config: 'test/fixtures/config.json' });
+  generate(FIXTURES, OUTPUT, { merge: true, prefix: PREFIX });
 }
 
-describe('config :: merge extends', function() {
+describe('prefix :: extends merge', function() {
 
   before(function() {
     reset();

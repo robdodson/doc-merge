@@ -8,8 +8,8 @@ var parse = require('polymer-context-free-parser/context-free-parser').parse;
  * attempt to build the list of elements using
  * a directory and prefix.
  *
- * ex: Find all elements in 'Users/dudebro/components' with
- * the prefix 'foo-'
+ * ex: Find all elements in 'Users/rob/components' with
+ * the prefix 'foo', as in 'foo-button'.
  */
 function buildList(dirpath, prefix) {
   var list = {};
@@ -19,8 +19,10 @@ function buildList(dirpath, prefix) {
       return path.join(dirpath, dir)
     })
     .filter(function(dir) {
-      return fs.statSync(dir).isDirectory() &&
-             path.basename(dir).indexOf(prefix) !== -1;
+      return fs.statSync(dir).isDirectory();
+    })
+    .filter(function(dir) {
+      return prefix.indexOf(path.basename(dir).split('-')[0]) !== -1;
     });
 
   dirs.forEach(function(dir) {
@@ -182,6 +184,9 @@ function generate(dirpath, output, options) {
   if (!settings.config) {
     if (!settings.prefix) {
       throw new Error('Missing config.json file or prefix');
+    }
+    if (!Array.isArray(settings.prefix)) {
+      throw new Error('Prefix setting must be an Array');
     }
     list = buildList(dirpath, settings.prefix);
   } else {

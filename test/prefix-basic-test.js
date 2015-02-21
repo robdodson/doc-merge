@@ -5,9 +5,9 @@ var assert = require('assert');
 var rimraf = require('rimraf');
 var mkdirp = require('mkdirp');
 
-var DIR = path.join(__dirname, 'fixtures');
+var FIXTURES = path.join(__dirname, 'fixtures');
 var OUTPUT = path.join(__dirname, 'tmp');
-var PREFIX = 'seed-';
+var PREFIX = ['seed'];
 
 function clean() {
   rimraf.sync(OUTPUT);
@@ -16,7 +16,7 @@ function clean() {
 function reset() {
   clean();
   mkdirp.sync(OUTPUT);
-  generate(DIR, OUTPUT, {prefix: PREFIX});
+  generate(FIXTURES, OUTPUT, {prefix: PREFIX});
 }
 
 describe('prefix :: basic', function() {
