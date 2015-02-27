@@ -158,6 +158,18 @@ function merge(entity, list) {
 }
 
 /**
+ * Quick fix to clean up element descriptions.
+ * Could be moved to context-free-parser itself
+ * 
+ */
+function sanitize(list) {
+  for (key in list) {
+    // Escape closing script tags
+    list[key].description = list[key].description.replace(/<\/\s?script>/ig, '<\\/script>');
+  }
+}
+
+/**
  * Writes a JSON file for each element to the specified output dir
  *
  * @param  {string} output A full path to an output directory
@@ -193,6 +205,8 @@ function generate(dirpath, output, options) {
   if (settings.merge) {
     list = mergeList(list);
   }
+
+  sanitize(list);
 
   writeFiles(output, list);
 }
